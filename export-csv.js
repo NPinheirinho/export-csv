@@ -19,13 +19,15 @@
     var each = Highcharts.each,
         pick = Highcharts.pick,
         seriesTypes = Highcharts.seriesTypes,
-        downloadAttrSupported = document.createElement('a').download !== undefined;
+        downloadAttrSupported = document.createElement('a').download !== undefined,
+        chartName = "";
 
     Highcharts.setOptions({
         lang: {
             downloadCSV: 'Download CSV',
             downloadXLS: 'Download XLS',
-            viewData: 'View data table'
+            viewData: 'View data table',
+            hideData: 'Hide data table'
         }
     });
 
@@ -262,6 +264,7 @@
     };
 
     function getContent(chart, href, extension, content, MIME) {
+        chartName="";
         var a,
             blobObject,
             name,
@@ -271,6 +274,7 @@
         if (chart.options.exporting.filename) {
             name = chart.options.exporting.filename;
         } else if (chart.title) {
+            chartName = chart.title.textStr;
             name = chart.title.textStr.replace(/ /g, '-').toLowerCase();
         } else {
             name = 'chart';
@@ -322,7 +326,7 @@
         var uri = 'data:application/vnd.ms-excel;base64,',
             template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">' +
                 '<head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet>' +
-                '<x:Name>Ark1</x:Name>' +
+                '<x:Name>'+chartName+'</x:Name>' +
                 '<x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]-->' +
                 '<style>td{border:none;font-family: Calibri, sans-serif;} .number{mso-number-format:"0.00";}</style>' +
                 '<meta name=ProgId content=Excel.Sheet>' +
@@ -360,21 +364,30 @@
         this.dataTableDiv.innerHTML = this.getTable();
     };
 
+    Highcharts.Chart.prototype.hideData = function () {
+        $(".highcharts-data-table").hide();
+    };
+
 
     // Add "Download CSV" to the exporting menu. Use download attribute if supported, else
     // run a simple PHP script that returns a file. The source code for the PHP script can be viewed at
     // https://raw.github.com/highslide-software/highcharts.com/master/studies/csv-export/csv.php
     if (Highcharts.getOptions().exporting) {
-        Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push({
-            textKey: 'downloadCSV',
-            onclick: function () { this.downloadCSV(); }
-        }, {
+        Highcharts.getOptions().exporting.buttons.contextButton.menuItems.push(
+        //     {
+        //     textKey: 'downloadCSV',
+        //     onclick: function () { this.downloadCSV(); }
+        // }, 
+        {
             textKey: 'downloadXLS',
             onclick: function () { this.downloadXLS(); }
         }, {
             textKey: 'viewData',
             onclick: function () { this.viewData(); }
-        });
+        },
+        {
+            textKey: 'hideData',
+            onclick: function () { this.hideData(); }});
     }
 
     // Series specific
