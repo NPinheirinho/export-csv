@@ -24,7 +24,7 @@
 
     Highcharts.setOptions({
         lang: {
-            downloadCSV: 'Download CSV',
+            // downloadCSV: 'Download CSV',
             downloadXLS: 'Download XLS',
             viewData: 'View data table',
             hideData: 'Hide data table'
@@ -308,16 +308,16 @@
     /**
      * Call this on click of 'Download CSV' button
      */
-    Highcharts.Chart.prototype.downloadCSV = function () {
-        var csv = this.getCSV(true);
-        getContent(
-            this,
-            'data:text/csv,\uFEFF' + encodeURIComponent(csv),
-            'csv',
-            csv,
-            'text/csv'
-        );
-    };
+    // Highcharts.Chart.prototype.downloadCSV = function () {
+    //     var csv = this.getCSV(true);
+    //     getContent(
+    //         this,
+    //         'data:text/csv,\uFEFF' + encodeURIComponent(csv),
+    //         'csv',
+    //         csv,
+    //         'text/csv'
+    //     );
+    // };
 
     /**
      * Call this on click of 'Download XLS' button
@@ -350,6 +350,7 @@
      * View the data in a table below the chart
      */
     Highcharts.Chart.prototype.viewData = function () {
+        $(".highcharts-data-table").show();
         if (!this.dataTableDiv) {
             this.dataTableDiv = document.createElement('div');
             this.dataTableDiv.className = 'highcharts-data-table';
